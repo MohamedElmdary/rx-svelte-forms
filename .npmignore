@@ -1,0 +1,6 @@
+**/.eslintrc.js
+**/.eslintignore
+**/.github/README.md
+coverage
+**/lib
+**/tests

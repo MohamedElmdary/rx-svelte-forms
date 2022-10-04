@@ -1,0 +1,34 @@
+{
+    "name": "rx-svelte-forms",
+    "version": "1.0.0",
+    "description": "Reactive svelte forms inspired by angular reactive forms.",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "repository": "git@github.com:MohamedElmdary/rx-svelte-forms.git",
+    "author": "MohamedElmdary <engm5081@gmail.com>",
+    "license": "MIT",
+    "keywords": [
+        "rx-svelte-forms",
+        "rx-forms",
+        "svelte-forms"
+    ],
+    "private": false,
+    "scripts": {
+        "build": "tsc",
+        "test": "echo 'should be implemented;'",
+        "prepare": "husky install"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.39.0",
+        "@typescript-eslint/parser": "^5.39.0",
+        "eslint": "^8.24.0",
+        "lint-staged": "^13.0.3",
+        "typescript": "^4.8.4",
+        "husky": "^8.0.0"
+    },
+    "lint-staged": {
+        "*.{ts,js}": [
+            "eslint -c .eslintrc.js . --fix"
+        ]
+    }
+}
