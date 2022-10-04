@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-        "target": "ES6",
-        "module": "commonjs",
+        "target": "ES2017",
+        "module": "ES2015",
         "moduleResolution": "node",
         "baseUrl": "./src",
         "outDir": "./dist",
