@@ -1,6 +1,6 @@
 import type { FormControl } from "../modules/FormControl"
 
-export type ValidatorResult = string | null;
+export type ValidatorResult = string | undefined;
 export type Validator<T> = (value: FormControl<T>) => ValidatorResult;
 export type AsyncValidator<T> = (value: FormControl<T>) => Promise<ValidatorResult>;
 export interface ControlValue<T> {

@@ -99,7 +99,7 @@ export class FormControl<T> extends AbstractControl<ControlValue<T>> {
         for (const validators of [this.__validators, this.__asyncValidators]) {
             for (const valiator of validators) {
                 const error = await valiator(this)
-                if (error !== null) {
+                if (error !== undefined) {
                     return this.setError(error)
                 }
             }

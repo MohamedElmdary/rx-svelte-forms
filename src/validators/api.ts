@@ -17,13 +17,13 @@ export const required = () => <T>(ctrl: FormControl<T>) => {
 }
 
 export const minLength = (min: number) => (ctrl: FormControl<string>) => {
-    if (!validator.isLength(ctrl.value, { min })) {
+    if (ctrl.value.length < min) {
         return `${_if(ctrl.name)} minLength is ${min}.`
     }
 }
 
 export const maxLength = (max: number) => (ctrl: FormControl<string>) => {
-    if (!validator.isLength(ctrl.value, { max })) {
+    if (ctrl.value.length > max) {
         return `${_if(ctrl.name)} maxLength is ${max}.`
     }
 }
@@ -59,7 +59,7 @@ export const max = (max: number) => (ctrl: FormControl<number>) => {
 }
 
 export const requiredTrue = () => (ctrl: FormControl<boolean>) => {
-    if (ctrl.value === true) {
+    if (ctrl.value !== true) {
         return `${_if(ctrl.name)} is required to be true.`
     }
 }
