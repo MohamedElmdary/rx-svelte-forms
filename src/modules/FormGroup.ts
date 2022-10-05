@@ -1,7 +1,7 @@
 import { AbstractControl } from "./AbstractControl"
-import { FormGroupValue, FormGroupConfig, GetValue, GroupValue } from "../types"
+import { FormGroupValue, FormGroupConfig, GetValue, GroupValue, FullGroupValue } from "../types"
 
-export class FormGroup<T extends object> extends AbstractControl<FormGroupValue<GroupValue<T>>> {
+export class FormGroup<T extends object> extends AbstractControl<FormGroupValue<FullGroupValue<T>>> {
     private __controls: FormGroupConfig<T>
     public get controls(): FormGroupConfig<T> {
         return this.__controls
@@ -54,9 +54,16 @@ export class FormGroup<T extends object> extends AbstractControl<FormGroupValue<
         return this.keys.some((key) => this.get(key).dirty)
     }
 
-    public getValue(): FormGroupValue<T> {
+    public get fullValue(): FullGroupValue<T> {
+        return this.keys.reduce((value, key) => {
+            value[key as unknown as string] = this.get(key).getValue()
+            return value
+        }, {} as {[key: string]: unknown}) as FullGroupValue<T>
+    }
+
+    public getValue(): FormGroupValue<FullGroupValue<T>> {
         return {
-            value: this.value,
+            value: this.fullValue,
             valid: this.valid,
             invalid: this.invalid,
             dirty: this.dirty,

@@ -7,6 +7,7 @@ export type FormGroupConfig<T> = {
       | FormControl<T[K]>;
 };
 export type GroupValue<T> = { [K in keyof T]: T[K] };
+export type FullGroupValue<T> = { [K in keyof T]: ControlValue<T[K]> };
 export type GetValue<T extends object, K extends keyof T> = T[K] extends object
   ? FormGroup<T[K]>
   : FormControl<T[K]>;
