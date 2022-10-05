@@ -105,6 +105,8 @@ export class FormControl<T> extends AbstractControl<ControlValue<T>> {
                 }
             }
         }
+
+        this.setError(null)
     }
 
     public override reset(): void {

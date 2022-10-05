@@ -19,16 +19,20 @@
         "prepare": "husky install"
     },
     "devDependencies": {
+        "@types/validator": "^13.7.7",
         "@typescript-eslint/eslint-plugin": "^5.39.0",
         "@typescript-eslint/parser": "^5.39.0",
         "eslint": "^8.24.0",
+        "husky": "^8.0.0",
         "lint-staged": "^13.0.3",
-        "typescript": "^4.8.4",
-        "husky": "^8.0.0"
+        "typescript": "^4.8.4"
     },
     "lint-staged": {
         "*.{ts,js}": [
             "eslint -c .eslintrc.js . --fix"
         ]
+    },
+    "dependencies": {
+        "validator": "^13.7.0"
     }
 }
