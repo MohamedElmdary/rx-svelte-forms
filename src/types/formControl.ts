@@ -12,5 +12,5 @@ export interface ControlValue<T> {
     untouched: boolean;
     pristine: boolean;
     pending: boolean;
-    error: string | null;
+    error: string | undefined;
 }

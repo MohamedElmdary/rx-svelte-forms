@@ -2,8 +2,8 @@ import { AbstractControl } from "./AbstractControl"
 import { Status, Validator, AsyncValidator, ControlValue } from "../types"
 
 export class FormControl<T> extends AbstractControl<ControlValue<T>> {
-    private __error: string | null
-    public get error(): string | null {
+    private __error?: string
+    public get error(): string | undefined {
         return this.__error
     }
 
@@ -20,7 +20,7 @@ export class FormControl<T> extends AbstractControl<ControlValue<T>> {
         return this.__value
     }
 
-    public setError(error: string | null): void {
+    public setError(error?: string): void {
         this.__error = error
         this.__status = error ? Status.INVALID : Status.VALID
         this.notify()
@@ -48,7 +48,6 @@ export class FormControl<T> extends AbstractControl<ControlValue<T>> {
         this.__validators = [...this.__defaultValidators]
         this.__defaultAsyncValidators = asyncValidators || []
         this.__asyncValidators = [...this.__defaultAsyncValidators]
-        this.__error = null
         this.__name = null
 
         this.validate()
@@ -106,7 +105,7 @@ export class FormControl<T> extends AbstractControl<ControlValue<T>> {
             }
         }
 
-        this.setError(null)
+        this.setError()
     }
 
     public override reset(): void {
@@ -115,7 +114,7 @@ export class FormControl<T> extends AbstractControl<ControlValue<T>> {
         this.__asyncValidators = [...this.__defaultAsyncValidators]
         this.__touched = false
         this.__dirty = false
-        this.__error = null
+        this.__error = undefined
 
         this.validate()
     }
