@@ -1,15 +1,27 @@
 import { ControlValue, ExtractArrayData, FormArrayExtends, FormGroupValue, RxArray, RxArrayData } from "../types"
 import { AbstractControl } from "./AbstractControl"
+import type { FormGroup } from "./FormGroup"
 
 
-export class FormArray<T extends FormArrayExtends> extends AbstractControl<FormGroupValue<[ControlValue<T>, number][]>> {
+type __ExtractInternalType<T> =
+    T extends Array<infer R> ?
+        R extends Array<any> ?
+            __ExtractInternalType<R> :
+            R extends FormGroup<infer G> ?
+                G :
+                R extends FormArray<infer G> ?
+                __ExtractInternalType<G> :
+                R :
+                T;
+
+export class FormArray<T extends FormArrayExtends> extends AbstractControl<FormGroupValue<[ControlValue<__ExtractInternalType<T>>, number][]>> {
     private __controls: RxArray<T>
     public get controls(): RxArrayData<T> {
         return this.__controls.items
     }
 
 
-    public get value(): [ControlValue<T>, number][] {
+    public get value(): [ControlValue<__ExtractInternalType<T>>, number][] {
         return this.controls.map(([ctrl, key]) => {
             return [{
                 value: ctrl.value,
@@ -28,6 +40,7 @@ export class FormArray<T extends FormArrayExtends> extends AbstractControl<FormG
     constructor(data: T) {
         super()
         this.__controls = new RxArray<T>(data)
+        this.controls.forEach(([ctrl]) => ctrl.setRoot(this as any))
     }
 
     public override get valid(): boolean {
@@ -60,7 +73,7 @@ export class FormArray<T extends FormArrayExtends> extends AbstractControl<FormG
         return item[0]
     }
 
-    public getValue(): FormGroupValue<[ControlValue<T>, number][]> {
+    public getValue(): FormGroupValue<[ControlValue<__ExtractInternalType<T>>, number][]> {
         return {
             value: this.value,
             dirty: this.dirty,
@@ -71,6 +84,18 @@ export class FormArray<T extends FormArrayExtends> extends AbstractControl<FormG
             untouched: this.untouched,
             valid: this.valid,
         }
+    }
+
+    public push(...items: T) {
+        const out = this.__controls.push(items)
+        this.notify()
+        return out
+    }
+
+    public removetAt(index: number) {
+        const item = this.__controls.removeAt(index)
+        if (item) this.notify()
+        return item
     }
 
     public reset(): void {

@@ -8,7 +8,7 @@ export class RxArray<T extends Array<any>> {
     public get items(): RxArrayData<T> {
         const items: RxArrayData<T> = []
         for (let i = 0; i < this.__data.length; i++) {
-            if (this.__removed.has(i)) {
+            if (!this.__removed.has(i)) {
                 items.push([this.__data[i], i])
             }
         }

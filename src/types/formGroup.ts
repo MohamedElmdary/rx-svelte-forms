@@ -9,7 +9,23 @@ export type FormGroupConfig<T> = {
       | FormArray<T[K] extends FormArrayExtends ? T[K] : FormArrayExtends>;
 };
 export type GroupValue<T> = { [K in keyof T]: T[K] };
-export type FullGroupValue<T> = { [K in keyof T]: ControlValue<T[K]> };
+
+export type ExtractInternalType<T> =
+    T extends Array<infer R> ?
+        R extends Array<any> ?
+            ExtractInternalType<R> :
+            R extends FormGroup<infer G> ?
+                FormGroupValue<G> :
+                R extends FormArray<infer G> ?
+                ExtractInternalType<G> :
+                R :
+                T;
+export type FullGroupValue<T> = { [K in keyof T]:
+    T[K] extends FormArrayExtends ?
+        ControlValue<[ExtractInternalType<T[K]>, number][]> :
+        ControlValue<T[K]>
+};
+
 export type GetValue<T extends object, K extends keyof T> =
     T[K] extends FormArrayExtends ?
         FormArray<T[K]> :
