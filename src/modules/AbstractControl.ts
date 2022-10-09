@@ -82,5 +82,6 @@ export abstract class AbstractControl<S> {
 
     public destroy(): void {
         this.__subscribers.clear()
+        this.root?.destroy()
     }
 }
