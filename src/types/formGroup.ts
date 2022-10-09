@@ -1,5 +1,5 @@
 import type { FormGroup, FormControl, FormArray } from "../modules"
-import { FormArrayExtends } from "./formArray";
+import { FormArrayExtends } from "./formArray"
 import { ControlValue } from "./formControl"
 
 export type FormGroupConfig<T> = {

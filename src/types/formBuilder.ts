@@ -1,6 +1,6 @@
 import type { AsyncValidator, Validator } from "./formControl"
 import type { FormArray, FormGroup } from "../modules"
-import { FormArrayExtends } from "./formArray";
+import { FormArrayExtends } from "./formArray"
 
 export type GroupOptions<T extends object> = {
   [K in keyof T]:

@@ -2,8 +2,8 @@ export type ExtractArrayData<T> = T extends Array<infer Q> ? Q : T;
 export type RxArrayData<T extends Array<any>> = [ExtractArrayData<T>, number][];
 
 export class RxArray<T extends Array<any>> {
-    private __data: T;
-    private __removed: Set<number>;
+    private __data: T
+    private __removed: Set<number>
 
     public get items(): RxArrayData<T> {
         const items: RxArrayData<T> = []
