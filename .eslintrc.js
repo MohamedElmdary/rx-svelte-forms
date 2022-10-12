@@ -30,9 +30,6 @@ module.exports = {
             "error",
             "double"
         ],
-        "semi": [
-            "error",
-            "never"
-        ]
+        "@typescript-eslint/no-explicit-any": "off"
     }
 }
