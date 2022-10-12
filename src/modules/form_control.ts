@@ -5,7 +5,10 @@ import { FormControlValue, FormControlErrors, FormResult } from "../types";
 type Validator<T> = (value: T) => FormControlErrors | undefined;
 type AsyncValidator<T> = (value: T) => Promise<FormControlErrors | undefined>;
 
-class FormControl<T> extends AbstractControl<FormControlValue<T>, T> {
+class FormControl<T extends string | number | boolean> extends AbstractControl<
+    FormControlValue<T>,
+    T
+> {
     private __status: Status;
 
     private __defaultValue: T;
