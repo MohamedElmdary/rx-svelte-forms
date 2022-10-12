@@ -17,16 +17,16 @@ interface FormControlValue<T> {
 
 type FormValue<T> = Omit<FormControlValue<T>, "errors">;
 
-type ExtractFormValue<T1> = T1 extends FA<infer T2>
-    ? FormValue<ExtractFormValue<T2 extends Array<infer T3> ? T3 : T2>[]>
+type ExtractFormValue<T1> = T1 extends Array<infer T2>
+    ? FormValue<ExtractFormValue<T2>[]>
+    : T1 extends FA<infer T2>
+    ? ExtractFormValue<T2>
     : T1 extends FG<infer T2>
-    ? FormValue<{
-          [K in keyof T2]: T2[K] extends FC<infer T3>
-              ? FormControlValue<T3>
-              : FormValue<ExtractFormValue<T2[K]>>;
-      }>
+    ? ExtractFormValue<T2>
     : T1 extends FC<infer T2>
     ? FormControlValue<T2>
+    : T1 extends object
+    ? FormValue<{ [K in keyof T1]: ExtractFormValue<T1[K]> }>
     : T1;
 
 type FormResult<T1> = T1 extends Array<infer T2>

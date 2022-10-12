@@ -1,4 +1,4 @@
-import AbstractControl from "internals/abstract_control";
+import AbstractControl from "../internals/abstract_control";
 import { ExtractFormValue, FormResult } from "../types";
 
 class FormGroup<T extends object> extends AbstractControl<
@@ -47,11 +47,10 @@ class FormGroup<T extends object> extends AbstractControl<
 
     constructor(controls: T) {
         super();
-        this.__controls = Object.keys(controls).reduce((ctrls, key) => {
-            const ctrl = (<any>controls)[key] as AbstractControl<any, any>;
-            ctrl.root = this;
-            return ctrls;
-        }, {} as T);
+        this.__controls = controls;
+        for (const key of Object.keys(controls)) {
+            (<any>controls)[key].ctrl = this;
+        }
     }
 
     public markAsTouched(): void {
@@ -105,9 +104,12 @@ class FormGroup<T extends object> extends AbstractControl<
         cb: (out: any, key: string, ctrl: AbstractControl<any, any>) => R,
         init?: R
     ): R {
-        return Object.keys(this.__controls).reduce((out, key) => {
-            return cb(out, key, (<any>this.__controls)[key]);
-        }, init || ({} as R)) as R;
+        return Object.keys(this.__controls).reduce(
+            (out, key) => {
+                return cb(out, key, (<any>this.__controls)[key]);
+            },
+            typeof init === "undefined" ? ({} as R) : init
+        ) as R;
     }
 }
 

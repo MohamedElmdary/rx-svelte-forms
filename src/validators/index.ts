@@ -9,36 +9,58 @@ import { Options } from "validator/lib/isBoolean";
 import { IsEmailOptions } from "validator/lib/isEmail";
 import { IsURLOptions } from "validator/lib/isURL";
 
-type V<T extends FCE = FCE, O = null> = O extends null
-    ? () => Validator<T>
-    : (config: O) => Validator<T>;
+// type V<T extends FCE = FCE, O = null> = O extends null
+//     ? () => Validator<T>
+//     : (config: O) => Validator<T>;
 
-function createValidator<T extends FCE = FCE, O = null>(
-    name: string,
-    predicate: (value: T, options: O) => boolean,
-    value?: any
-): V<T, O> {
-    return ((configs: any) => {
-        return (ctrl: any) => {
-            if (predicate(ctrl, configs)) {
-                return {
-                    [name]: value || configs,
-                };
-            }
-        };
-    }) as unknown as V<T, O>;
+// function createValidator<T extends FCE = FCE, O = null>(
+//     name: string,
+//     predicate: (value: any, options: O) => boolean,
+//     value?: any
+// ): V<T, O> {
+//     return ((configs: any) => {
+//         return <T>(ctrl: T) => {
+//             if (predicate(ctrl, configs)) {
+//                 return {
+//                     [name]: value || configs,
+//                 };
+//             }
+//         };
+//     }) as unknown as V<T, O>;
+// }
+
+// const c = createValidator;
+
+// const _required = (v: any) => v === "" || v === undefined || v === null;
+// export const required = c("required", _required, true);
+export function required() {
+    return <T extends FCE>({ value: v }: FormControl<T>) => {
+        if (v === "" || v === undefined || v === null) {
+            return { required: true };
+        }
+    };
 }
 
-const c = createValidator;
+export function minLength(min: number) {
+    return ({ value: v }: FormControl<string>) => {
+        if (v.length < min) {
+            return { minLength: min };
+        }
+    };
+}
 
-const _required = (v: any) => v === "" || v === undefined || v === null;
-export const required = c("required", _required, true);
+export function maxLength(max: number) {
+    return ({ value: v }: FormControl<string>) => {
+        if (v.length > max) {
+            return { maxLength: max };
+        }
+    };
+}
+// const _minLength = (v: string, min: number) => v.length < min;
+// export const minLength = c<string, number>("minLength", _minLength);
 
-const _minLength = (v: string, min: number) => v.length < min;
-export const minLength = c<string, number>("minLength", _minLength);
-
-const _maxLength = (v: string, max: number) => v.length > max;
-export const maxLength = c<string, number>("maxLength", _maxLength);
+// const _maxLength = (v: string, max: number) => v.length > max;
+// export const maxLength = c<string, number>("maxLength", _maxLength);
 
 // export const isEmail = (options?: IsEmailOptions) => (ctrl: FormControl<string>) => {
 //     if (!validator.isEmail(ctrl.value, options)) {

@@ -1,4 +1,4 @@
-import FormControl, { AsyncValidator, Validator } from "./form_control";
+import FormControl, { AsyncValidator, FCE, Validator } from "./form_control";
 import FormGroup from "./form_group";
 import FormArray from "./form_array";
 import AbstractControl from "internals/abstract_control";
@@ -8,8 +8,12 @@ type FormGroupBuilder<T extends object> = {
     [K in keyof T]:
         | [
               value?: T[K],
-              validators?: Validator<T[K]>[] | undefined,
-              asyncValidators?: AsyncValidator<T[K]>[] | undefined
+              validators?:
+                  | Validator<T[K] extends FCE ? T[K] : FCE>[]
+                  | undefined,
+              asyncValidators?:
+                  | AsyncValidator<T[K] extends FCE ? T[K] : FCE>[]
+                  | undefined
           ]
         | FormGroup<T[K] extends object ? T[K] : object>
         | FormArray<T[K] extends _FAE ? T[K] : _FAE>;
