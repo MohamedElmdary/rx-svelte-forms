@@ -9,7 +9,6 @@ enum Status {
 abstract class AbstractControl<T> extends RxStore<T> {
     public root?: AbstractControl<T>;
 
-    public abstract get status(): Status;
     public abstract get valid(): boolean;
     public abstract get invalid(): boolean;
     public abstract get pending(): boolean;

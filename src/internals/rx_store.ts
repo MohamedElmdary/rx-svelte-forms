@@ -22,7 +22,7 @@ abstract class RxStore<T> {
         this.__listeners.clear();
     }
 
-    protected _notifyListeners(): void {
+    public notifyListeners(): void {
         const value = this.getValue();
         for (const listener of this.__listeners) {
             listener(value);
