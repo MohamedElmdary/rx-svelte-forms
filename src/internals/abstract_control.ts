@@ -32,6 +32,7 @@ abstract class AbstractControl<T, V> extends RxStore<T> {
     public abstract markAsTouched(): void;
     public abstract markAsDirty(): void;
     public abstract validate(): void;
+    public abstract reset(): void;
 }
 
 export { AbstractControl as default, Status };

@@ -54,13 +54,13 @@ class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
     }
 
     public markAsTouched(): void {
-        throw new Error("Method not implemented.");
+        this.__controls.forEach((ctrl) => ctrl.markAsTouched());
     }
     public markAsDirty(): void {
-        throw new Error("Method not implemented.");
+        this.__controls.forEach((ctrl) => ctrl.markAsDirty());
     }
     public validate(): void {
-        throw new Error("Method not implemented.");
+        this.__controls.forEach((ctrl) => ctrl.validate());
     }
 
     public getValue(): ExtractFormValue<T> {
@@ -74,6 +74,15 @@ class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
             dirty: this.dirty,
             pristine: this.pristine,
         } as ExtractFormValue<T>;
+    }
+
+    public reset(): void {
+        this.controls.forEach((ctrl) => ctrl.reset());
+    }
+
+    public override destroy(): void {
+        super.destroy();
+        this.controls.forEach((ctrl) => ctrl.destroy());
     }
 }
 

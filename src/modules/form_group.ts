@@ -55,13 +55,21 @@ class FormGroup<T extends object> extends AbstractControl<
     }
 
     public markAsTouched(): void {
-        throw new Error("Method not implemented.");
+        Object.keys(this.__controls).forEach((key) => {
+            (<any>this.__controls)[key].markAsTouched();
+        });
     }
+
     public markAsDirty(): void {
-        throw new Error("Method not implemented.");
+        Object.keys(this.__controls).forEach((key) => {
+            (<any>this.__controls)[key].markAsDirty();
+        });
     }
+
     public validate(): void {
-        throw new Error("Method not implemented.");
+        Object.keys(this.__controls).forEach((key) => {
+            (<any>this.__controls)[key].validate();
+        });
     }
 
     public getValue(): ExtractFormValue<T> {
@@ -78,6 +86,19 @@ class FormGroup<T extends object> extends AbstractControl<
             dirty: this.dirty,
             pristine: this.pristine,
         } as ExtractFormValue<T>;
+    }
+
+    public reset(): void {
+        Object.keys(this.__controls).forEach((key) => {
+            (<any>this.__controls)[key].reset();
+        });
+    }
+
+    public override destroy(): void {
+        super.destroy();
+        Object.keys(this.__controls).forEach((key) => {
+            (<any>this.__controls)[key].destroy();
+        });
     }
 
     private __reduce<R = any>(

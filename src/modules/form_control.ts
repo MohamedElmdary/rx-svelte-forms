@@ -123,6 +123,17 @@ class FormControl<T> extends AbstractControl<FormControlValue<T>, T> {
         };
     }
 
+    public reset(): void {
+        this.__value = this.__defaultValue;
+        this.__validators = [...this.__defaultValidators];
+        this.__asyncValidators = [...this.__defaultAsyncValidators];
+        this.__status = Status.invalid;
+        this.__touched = false;
+        this.__dirty = false;
+
+        this.validate();
+    }
+
     public override notifyListeners(): void {
         super.notifyListeners();
         this.root?.notifyListeners();
