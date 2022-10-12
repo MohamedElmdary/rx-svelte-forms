@@ -2,10 +2,11 @@ import AbstractControl, { Status } from "../internals/abstract_control";
 import utils from "../utils";
 import { FormControlValue, FormControlErrors, FormResult } from "../types";
 
-type Validator<T> = (value: T) => FormControlErrors | undefined;
-type AsyncValidator<T> = (value: T) => Promise<FormControlErrors | undefined>;
+type FCE = string | number | boolean;
+type Validator<T extends FCE> = (ctrl: FormControl<T>) => FormControlErrors | undefined | void; // prettier-ignore
+type AsyncValidator<T extends FCE> = (ctrl: FormControl<T>) => Promise<FormControlErrors | undefined | void>; // prettier-ignore
 
-class FormControl<T extends string | number | boolean> extends AbstractControl<
+class FormControl<T extends FCE> extends AbstractControl<
     FormControlValue<T>,
     T
 > {
@@ -95,14 +96,14 @@ class FormControl<T extends string | number | boolean> extends AbstractControl<
         let errors: FormControlErrors = {};
 
         for (const validator of this.__validators) {
-            const error = validator(this.__value);
+            const error = validator(this);
             if (!error) continue;
             errors = utils.merge(errors, error);
         }
 
         if (Object.keys(errors).length === 0) {
             for (const validator of this.__asyncValidators) {
-                const error = await validator(this.__value);
+                const error = await validator(this);
                 if (!error) continue;
                 errors = utils.merge(errors, error);
                 break;
@@ -144,6 +145,7 @@ class FormControl<T extends string | number | boolean> extends AbstractControl<
 }
 
 export {
+    FCE,
     FormControl as default,
     FormControlErrors,
     FormControlValue,
