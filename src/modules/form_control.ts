@@ -1,29 +1,17 @@
 import AbstractControl, { Status } from "../internals/abstract_control";
 import utils from "../utils";
-
-type FormControlErrors = { [key: string]: any };
-interface FormControlValue<T> {
-    value: T;
-    valid: boolean;
-    invalid: boolean;
-    pending: boolean;
-    touched: boolean;
-    untouched: boolean;
-    dirty: boolean;
-    pristine: boolean;
-    errors: FormControlErrors;
-}
+import { FormControlValue, FormControlErrors, FormResult } from "../types";
 
 type Validator<T> = (value: T) => FormControlErrors | undefined;
 type AsyncValidator<T> = (value: T) => Promise<FormControlErrors | undefined>;
 
-class FormControl<T> extends AbstractControl<FormControlValue<T>> {
+class FormControl<T> extends AbstractControl<FormControlValue<T>, T> {
     private __status: Status;
 
     private __defaultValue: T;
     private __value: T;
-    public get value(): T {
-        return this.__value;
+    public get value(): FormResult<T> {
+        return this.__value as FormResult<T>;
     }
     public setValue(value: T): void {
         this.__value = value;
@@ -53,10 +41,6 @@ class FormControl<T> extends AbstractControl<FormControlValue<T>> {
         return this.__status === Status.valid;
     }
 
-    public get invalid(): boolean {
-        return this.__status !== Status.valid;
-    }
-
     public get pending(): boolean {
         return this.__status === Status.pending;
     }
@@ -66,17 +50,9 @@ class FormControl<T> extends AbstractControl<FormControlValue<T>> {
         return this.__touched;
     }
 
-    public get untouched(): boolean {
-        return !this.__touched;
-    }
-
     private __dirty: boolean;
     public get dirty(): boolean {
         return this.__dirty;
-    }
-
-    public get pristine(): boolean {
-        return !this.__dirty;
     }
 
     constructor(
@@ -116,14 +92,14 @@ class FormControl<T> extends AbstractControl<FormControlValue<T>> {
         let errors: FormControlErrors = {};
 
         for (const validator of this.__validators) {
-            const error = validator(this.value);
+            const error = validator(this.__value);
             if (!error) continue;
             errors = utils.merge(errors, error);
         }
 
         if (Object.keys(errors).length === 0) {
             for (const validator of this.__asyncValidators) {
-                const error = await validator(this.value);
+                const error = await validator(this.__value);
                 if (!error) continue;
                 errors = utils.merge(errors, error);
                 break;
@@ -135,7 +111,7 @@ class FormControl<T> extends AbstractControl<FormControlValue<T>> {
 
     public getValue(): FormControlValue<T> {
         return {
-            value: this.value,
+            value: this.__value,
             valid: this.valid,
             dirty: this.dirty,
             invalid: this.invalid,
@@ -154,7 +130,7 @@ class FormControl<T> extends AbstractControl<FormControlValue<T>> {
 }
 
 export {
-    FormControl as defaultValue,
+    FormControl as default,
     FormControlErrors,
     FormControlValue,
     Validator,
