@@ -26,6 +26,7 @@ function form(el: Element, ctrl: AbstractControl<any, any>) {
         const unsubscribe = ctrl.onPush((ctrls) => {
             for (const ctrl of ctrls) {
                 const els = el.querySelectorAll(`[name="${ctrl.key}"]`);
+                console.log({ ctrl, els });
 
                 for (const _el of els) {
                     form(_el, ctrl);

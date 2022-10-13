@@ -137,11 +137,6 @@ class FormControl<T extends FCE> extends AbstractControl<
 
         this.validate();
     }
-
-    public override notifyListeners(): void {
-        super.notifyListeners();
-        this.root?.notifyListeners();
-    }
 }
 
 export {

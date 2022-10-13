@@ -15,10 +15,11 @@ interface FormControlValue<T> {
     errors: FormControlErrors;
 }
 
-type FormValue<T> = Omit<FormControlValue<T>, "errors">;
+type FormGroupValue<T> = Omit<FormControlValue<T>, "errors">;
+type FormArrayValue<T, C> = FormGroupValue<T> & { controls: C };
 
 type ExtractFormValue<T1> = T1 extends Array<infer T2>
-    ? FormValue<ExtractFormValue<T2>[]>
+    ? FormArrayValue<ExtractFormValue<T2>[], T1>
     : T1 extends FA<infer T2>
     ? ExtractFormValue<T2>
     : T1 extends FG<infer T2>
@@ -26,7 +27,7 @@ type ExtractFormValue<T1> = T1 extends Array<infer T2>
     : T1 extends FC<infer T2>
     ? FormControlValue<T2>
     : T1 extends object
-    ? FormValue<{ [K in keyof T1]: ExtractFormValue<T1[K]> }>
+    ? FormGroupValue<{ [K in keyof T1]: ExtractFormValue<T1[K]> }>
     : T1;
 
 type FormResult<T1> = T1 extends Array<infer T2>
@@ -44,7 +45,7 @@ type FormResult<T1> = T1 extends Array<infer T2>
 export {
     FormControlErrors,
     FormControlValue,
-    FormValue,
+    FormGroupValue,
     ExtractFormValue,
     FormResult,
 };

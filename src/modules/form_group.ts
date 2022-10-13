@@ -100,11 +100,6 @@ class FormGroup<T extends object> extends AbstractControl<
         });
     }
 
-    public override notifyListeners(): void {
-        super.notifyListeners();
-        this.root?.notifyListeners();
-    }
-
     private __reduce<R = any>(
         cb: (out: any, key: string, ctrl: AbstractControl<any, any>) => R,
         init?: R

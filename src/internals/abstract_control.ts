@@ -33,6 +33,11 @@ abstract class AbstractControl<T, V> extends RxStore<T> {
     public abstract markAsDirty(): void;
     public abstract validate(): void;
     public abstract reset(): void;
+
+    public override notifyListeners(): void {
+        super.notifyListeners();
+        this.root?.notifyListeners();
+    }
 }
 
 export { AbstractControl as default, Status };

@@ -53,11 +53,11 @@ class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
     constructor(controls: T) {
         super();
         this.__index = 0;
-        this.__controls = controls.map((ctrl) => {
+        this.__controls = controls;
+        for (const ctrl of controls) {
             ctrl.key = this.__index++;
             ctrl.root = this;
-            return ctrl;
-        }) as T;
+        }
         this.__onPush = new Set<OnPush>();
     }
 
@@ -85,6 +85,7 @@ class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
             untouched: this.untouched,
             dirty: this.dirty,
             pristine: this.pristine,
+            controls: this.controls,
         } as ExtractFormValue<T>;
     }
 
@@ -107,8 +108,8 @@ class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
         /* delay to next tick */
         requestAnimationFrame(() => {
             this.__onPush.forEach((fn) => fn(ctrls));
+            this.notifyListeners();
         });
-        this.notifyListeners();
         return this.__index - 1;
     }
 
