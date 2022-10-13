@@ -16,12 +16,26 @@ function form(el: Element, ctrl: AbstractControl<any, any>) {
 
     if (ctrl instanceof FormArray) {
         const ctrls = ctrl.controls as AbstractControl<any, any>[];
-        return ctrls.forEach((_ctrl) => {
+        ctrls.forEach((_ctrl) => {
             const els = el.querySelectorAll(`[name="${_ctrl.key}"]`);
             for (const _el of els) {
                 form(_el, _ctrl);
             }
         });
+
+        const unsubscribe = ctrl.onPush((ctrls) => {
+            for (const ctrl of ctrls) {
+                const els = el.querySelectorAll(`[name="${ctrl.key}"]`);
+
+                for (const _el of els) {
+                    form(_el, ctrl);
+                }
+            }
+        });
+
+        return {
+            destroy: unsubscribe,
+        };
     }
 
     if (ctrl instanceof FormControl) {

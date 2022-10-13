@@ -19,9 +19,6 @@ class FormControl<T extends FCE> extends AbstractControl<
     }
     public setValue(value: T): void {
         this.__value = value;
-        if (!this.__touched) {
-            return this.notifyListeners();
-        }
         this.validate();
     }
 
@@ -93,6 +90,9 @@ class FormControl<T extends FCE> extends AbstractControl<
     }
 
     public async validate(): Promise<void> {
+        this.__status = Status.pending;
+        this.notifyListeners();
+
         let errors: FormControlErrors = {};
 
         for (const validator of this.__validators) {

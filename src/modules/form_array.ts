@@ -1,5 +1,8 @@
 import AbstractControl from "../internals/abstract_control";
 import { ExtractFormValue, FormResult } from "../types";
+import { Unsubscriber } from "../internals/rx_store";
+
+type OnPush = (ctrls: AbstractControl<any, any>[]) => void;
 
 class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
     ExtractFormValue<T>,
@@ -39,6 +42,14 @@ class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
         }, false);
     }
 
+    private __onPush: Set<OnPush>;
+    public onPush(fn: OnPush): Unsubscriber {
+        this.__onPush.add(fn);
+        return () => {
+            this.__onPush.delete(fn);
+        };
+    }
+
     constructor(controls: T) {
         super();
         this.__index = 0;
@@ -47,6 +58,7 @@ class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
             ctrl.root = this;
             return ctrl;
         }) as T;
+        this.__onPush = new Set<OnPush>();
     }
 
     public get(key: number): (T extends Array<infer Q> ? Q : T) | undefined {
@@ -83,7 +95,31 @@ class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
     public override destroy(): void {
         super.destroy();
         this.controls.forEach((ctrl) => ctrl.destroy());
+        this.__onPush.clear();
+    }
+
+    public push(...ctrls: T) {
+        for (const ctrl of ctrls) {
+            ctrl.key = this.__index++;
+            ctrl.root = this;
+            this.__controls.push(ctrl);
+        }
+        /* delay to next tick */
+        requestAnimationFrame(() => {
+            this.__onPush.forEach((fn) => fn(ctrls));
+        });
+        this.notifyListeners();
+        return this.__index - 1;
+    }
+
+    public removeAt(index: number): boolean {
+        const idx = this.__controls.findIndex((ctrl) => ctrl.key === index);
+        if (idx === -1) return false;
+        const [ctrl] = this.__controls.splice(idx, 1);
+        ctrl.destroy();
+        this.notifyListeners();
+        return true;
     }
 }
 
-export { FormArray as default };
+export { FormArray as default, OnPush };

@@ -49,7 +49,7 @@ class FormGroup<T extends object> extends AbstractControl<
         super();
         this.__controls = controls;
         for (const key of Object.keys(controls)) {
-            (<any>controls)[key].ctrl = this;
+            (<any>controls)[key].root = this;
         }
     }
 
@@ -98,6 +98,11 @@ class FormGroup<T extends object> extends AbstractControl<
         Object.keys(this.__controls).forEach((key) => {
             (<any>this.__controls)[key].destroy();
         });
+    }
+
+    public override notifyListeners(): void {
+        super.notifyListeners();
+        this.root?.notifyListeners();
     }
 
     private __reduce<R = any>(

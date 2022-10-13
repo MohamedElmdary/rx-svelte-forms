@@ -66,7 +66,7 @@ export function min(min: number) {
 
 export function max(max: number) {
     return ({ value }: FormControl<number>) => {
-        if (value < max) {
+        if (value > max) {
             return { max };
         }
     };
