@@ -156,7 +156,7 @@ class FormControl<T extends FCE> extends AbstractControl<
 
     private __setRequired(): void {
         for (const validator of this.__validators) {
-            const error = validator(null as any);
+            const error = validator({ value: null } as any);
             if (error && error.required) {
                 this.__required = true;
                 return;
