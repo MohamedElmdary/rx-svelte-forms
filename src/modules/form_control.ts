@@ -1,6 +1,7 @@
 import AbstractControl, { Status } from "../internals/abstract_control";
 import utils from "../utils";
 import { FormControlValue, FormControlErrors, FormResult } from "../types";
+import { validators } from "public_api";
 
 type FCE = string | number | boolean;
 type Validator<T extends FCE> = (ctrl: FormControl<T>) => FormControlErrors | undefined | void; // prettier-ignore
@@ -11,6 +12,7 @@ class FormControl<T extends FCE> extends AbstractControl<
     T
 > {
     private __status: Status;
+    private __required = false;
 
     private __defaultValue: T;
     private __value: T;
@@ -72,6 +74,7 @@ class FormControl<T extends FCE> extends AbstractControl<
         this.__touched = false;
         this.__dirty = false;
 
+        this.__setRequired();
         this.validate();
     }
 
@@ -92,6 +95,18 @@ class FormControl<T extends FCE> extends AbstractControl<
     public async validate(): Promise<void> {
         this.__status = Status.pending;
         this.notifyListeners();
+
+        /* Support special validator (required) */
+        if (!this.__required) {
+            if (
+                this.value === "" ||
+                this.value === undefined ||
+                this.value === null
+            ) {
+                this.errors = {};
+                return;
+            }
+        }
 
         let errors: FormControlErrors = {};
 
@@ -135,7 +150,19 @@ class FormControl<T extends FCE> extends AbstractControl<
         this.__touched = false;
         this.__dirty = false;
 
+        this.__setRequired();
         this.validate();
+    }
+
+    private __setRequired(): void {
+        for (const validator of this.__validators) {
+            const error = validator(null as any);
+            if (error && error.required) {
+                this.__required = true;
+                return;
+            }
+        }
+        this.__required = false;
     }
 }
 
