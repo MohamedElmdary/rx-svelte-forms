@@ -47,7 +47,11 @@ function form(el: Element, ctrl: AbstractControl<any, any>) {
         };
 
         if ($ instanceof HTMLSelectElement) __handleSelect($, ctrl);
-        else if ($ instanceof HTMLInputElement) __handleInput($, ctrl);
+        else if (
+            $ instanceof HTMLTextAreaElement ||
+            $ instanceof HTMLInputElement
+        )
+            __handleInput($, ctrl);
 
         return {
             destroy() {
