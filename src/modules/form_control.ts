@@ -1,10 +1,9 @@
 import AbstractControl, { Status } from "../internals/abstract_control";
-import utils from "../utils";
 import { FormControlValue, FormControlErrors, FormResult } from "../types";
 
 type FCE = string | number | boolean;
-type Validator<T extends FCE> = (ctrl: FormControl<T>) => FormControlErrors | undefined | void; // prettier-ignore
-type AsyncValidator<T extends FCE> = (ctrl: FormControl<T>) => Promise<FormControlErrors | undefined | void>; // prettier-ignore
+type Validator<T extends FCE> = (ctrl: FormControl<T>) => FormControlErrors; // prettier-ignore
+type AsyncValidator<T extends FCE> = (ctrl: FormControl<T>) => Promise<FormControlErrors>; // prettier-ignore
 
 class FormControl<T extends FCE> extends AbstractControl<
     FormControlValue<T>,
@@ -19,7 +18,6 @@ class FormControl<T extends FCE> extends AbstractControl<
         return this.__value as FormResult<T>;
     }
     public setValue(value: T): void {
-        console.log("SetValue", value);
         this.__value = value;
         this.validate();
     }
@@ -29,14 +27,13 @@ class FormControl<T extends FCE> extends AbstractControl<
         this.__input = input;
     }
 
-    private __errors: FormControlErrors = {};
-    public get errors(): FormControlErrors {
-        return this.__errors;
+    private __error: FormControlErrors;
+    public get error(): FormControlErrors {
+        return this.__error;
     }
-    public set errors(errors: FormControlErrors) {
-        this.__errors = errors;
-        this.__status =
-            Object.keys(errors).length === 0 ? Status.valid : Status.invalid;
+    public set error(error: FormControlErrors) {
+        this.__error = error;
+        this.__status = !error ? Status.valid : Status.invalid;
         this.notifyListeners();
     }
 
@@ -108,29 +105,20 @@ class FormControl<T extends FCE> extends AbstractControl<
                 this.value === undefined ||
                 this.value === null
             ) {
-                this.errors = {};
+                this.error = undefined;
                 return;
             }
         }
 
-        let errors: FormControlErrors = {};
-
-        for (const validator of this.__validators) {
-            const error = validator(this);
-            if (!error) continue;
-            errors = utils.merge(errors, error);
-        }
-
-        if (Object.keys(errors).length === 0) {
-            for (const validator of this.__asyncValidators) {
+        for (const validators of [this.__validators, this.__asyncValidators]) {
+            for (const validator of validators) {
                 const error = await validator(this);
-                if (!error) continue;
-                errors = utils.merge(errors, error);
-                break;
+                if (error) {
+                    this.error = error;
+                    break;
+                }
             }
         }
-
-        this.errors = errors;
     }
 
     public getValue(): FormControlValue<T> {
@@ -143,7 +131,7 @@ class FormControl<T extends FCE> extends AbstractControl<
             pristine: this.pristine,
             touched: this.touched,
             untouched: this.untouched,
-            errors: this.errors,
+            error: this.error?.message,
         };
     }
 

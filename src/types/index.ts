@@ -2,7 +2,11 @@ import type { default as FC } from "../modules/form_control";
 import type { default as FG } from "../modules/form_group";
 import type { default as FA } from "../modules/form_array";
 
-type FormControlErrors = { [key: string]: any };
+type FormControlErrors =
+    | ({ message: string } & { [key: string]: any })
+    | void
+    | undefined
+    | null;
 interface FormControlValue<T> {
     value: T;
     valid: boolean;
@@ -12,7 +16,7 @@ interface FormControlValue<T> {
     untouched: boolean;
     dirty: boolean;
     pristine: boolean;
-    errors: FormControlErrors;
+    error?: string;
 }
 
 type FormGroupValue<T> = Omit<FormControlValue<T>, "errors">;

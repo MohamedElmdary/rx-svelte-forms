@@ -8,82 +8,82 @@ import { IsURLOptions } from "validator/lib/isURL";
 
 const str = utils.toString;
 
-export function required() {
+export function required(msg: string) {
     return <T extends FCE>({ value }: FormControl<T>) => {
         if (value === "" || value === undefined || value === null) {
-            return { required: true };
+            return { message: msg, required: true };
         }
     };
 }
 
-export function minLength(min: number) {
+export function minLength(msg: string, min: number) {
     return ({ value }: FormControl<string>) => {
         if (str(value).length < min) {
-            return { minLength: min };
+            return { message: msg, minLength: min };
         }
     };
 }
 
-export function maxLength(max: number) {
+export function maxLength(msg: string, max: number) {
     return ({ value }: FormControl<string>) => {
         if (str(value).length > max) {
-            return { maxLength: max };
+            return { message: msg, maxLength: max };
         }
     };
 }
 
-export function isEmail(options?: IsEmailOptions) {
+export function isEmail(msg: string, options?: IsEmailOptions) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isEmail(str(value), options)) {
-            return { isEmail: options || true };
+            return { message: msg, isEmail: options || true };
         }
     };
 }
 
-export function isIn(list: string[]) {
+export function isIn(msg: string, list: string[]) {
     return <T extends FCE>({ value }: FormControl<T>) => {
         if (!validator.isIn(str(value), list)) {
-            return { isIn: list };
+            return { message: msg, isIn: list };
         }
     };
 }
 
-export function isInt(options?: validator.IsIntOptions) {
+export function isInt(msg: string, options?: validator.IsIntOptions) {
     return <T extends number | string>({ value }: FormControl<T>) => {
         if (!validator.isInt(str(value), options)) {
-            return { isInt: options || true };
+            return { message: msg, isInt: options || true };
         }
     };
 }
 
-export function min(min: number) {
+export function min(msg: string, min: number) {
     return ({ value }: FormControl<number>) => {
         if (value < min) {
-            return { min };
+            return { message: msg, min };
         }
     };
 }
 
-export function max(max: number) {
+export function max(msg: string, max: number) {
     return ({ value }: FormControl<number>) => {
         if (value > max) {
-            return { max };
+            return { message: msg, max };
         }
     };
 }
 
-export function requiredTrue() {
+export function requiredTrue(msg: string) {
     return ({ value }: FormControl<boolean>) => {
         if (value !== true) {
-            return { requiredTrue: true };
+            return { message: msg, requiredTrue: true };
         }
     };
 }
 
-export function isAfter(date?: string) {
+export function isAfter(msg: string, date?: string) {
     return <T extends number | string>({ value }: FormControl<T>) => {
         if (!validator.isAfter(str(value), date)) {
-            return { isAfter: date || true };
+            return { message: msg, isAfter: date || true };
         }
     };
 }
@@ -92,10 +92,10 @@ export interface IsAlpha {
     locale?: validator.AlphaLocale;
     options?: validator.IsAlphaOptions;
 }
-export function isAlpha(config: IsAlpha = {}) {
+export function isAlpha(msg: string, config: IsAlpha = {}) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isAlpha(str(value), config.locale, config.options)) {
-            return { isAlpha: config };
+            return { message: msg, isAlpha: config };
         }
     };
 }
@@ -104,396 +104,402 @@ export interface IsAlphanumeric {
     locale?: validator.AlphanumericLocale;
     options?: validator.IsAlphanumericOptions;
 }
-export function isAlphanumeric(config: IsAlphanumeric = {}) {
+export function isAlphanumeric(msg: string, config: IsAlphanumeric = {}) {
     const { locale, options } = config;
     return ({ value }: FormControl<string>) => {
         if (!validator.isAlphanumeric(str(value), locale, options)) {
-            return { isAlphanumeric: config };
+            return { message: msg, isAlphanumeric: config };
         }
     };
 }
 
-export function isAscii() {
+export function isAscii(msg: string) {
     return <T extends FCE>({ value }: FormControl<T>) => {
         if (!validator.isAscii(str(value))) {
-            return { isAscii: true };
+            return { message: msg, isAscii: true };
         }
     };
 }
 
-export function isBIC() {
+export function isBIC(msg: string) {
     return <T extends FCE>({ value }: FormControl<T>) => {
         if (!validator.isBIC(str(value))) {
-            return { isBIC: true };
+            return { message: msg, isBIC: true };
         }
     };
 }
 
-export function isBase32() {
+export function isBase32(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isBase32(str(value))) {
-            return { isBase32: true };
+            return { message: msg, isBase32: true };
         }
     };
 }
 
-export function isBase58() {
+export function isBase58(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isBase58(str(value))) {
-            return { isBase58: true };
+            return { message: msg, isBase58: true };
         }
     };
 }
 
-export function isBase64() {
+export function isBase64(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isBase64(str(value))) {
-            return { isBase64: true };
+            return { message: msg, isBase64: true };
         }
     };
 }
 
-export function isBoolean(options?: Options) {
+export function isBoolean(msg: string, options?: Options) {
     return <T extends boolean | string>({ value }: FormControl<T>) => {
         if (!validator.isBoolean(str(value), options)) {
-            return { isBoolean: options || true };
+            return { message: msg, isBoolean: options || true };
         }
     };
 }
 
-export function isBefore(date?: string) {
+export function isBefore(msg: string, date?: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isBefore(str(value), date)) {
-            return { isBefore: date || true };
+            return { message: msg, isBefore: date || true };
         }
     };
 }
 
-export function isBtcAddress() {
+export function isBtcAddress(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isBtcAddress(str(value))) {
-            return { isBtcAddress: true };
+            return { message: msg, isBtcAddress: true };
         }
     };
 }
 
-export function isByteLength(options?: validator.IsByteLengthOptions) {
+export function isByteLength(
+    msg: string,
+    options?: validator.IsByteLengthOptions
+) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isByteLength(str(value), options)) {
-            return { isByteLength: options || true };
+            return { message: msg, isByteLength: options || true };
         }
     };
 }
 
-export function isCreditCard() {
+export function isCreditCard(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isCreditCard(str(value))) {
-            return { isCreditCard: true };
+            return { message: msg, isCreditCard: true };
         }
     };
 }
 
-export function isCurrency(options?: validator.IsCurrencyOptions) {
+export function isCurrency(msg: string, options?: validator.IsCurrencyOptions) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isCurrency(str(value), options)) {
-            return { isCurrency: options || true };
+            return { message: msg, isCurrency: options || true };
         }
     };
 }
 
-export function isDataURI() {
+export function isDataURI(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isDataURI(str(value))) {
-            return { isDataURI: true };
+            return { message: msg, isDataURI: true };
         }
     };
 }
 
-export function isDate(options?: validator.IsDateOptions) {
+export function isDate(msg: string, options?: validator.IsDateOptions) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isDate(str(value), options)) {
-            return { isDate: options || true };
+            return { message: msg, isDate: options || true };
         }
     };
 }
 
-export function isDecimal(options?: validator.IsDecimalOptions) {
+export function isDecimal(msg: string, options?: validator.IsDecimalOptions) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isDecimal(str(value), options)) {
-            return { isDecimal: options || true };
+            return { message: msg, isDecimal: options || true };
         }
     };
 }
 
-export function isDivisibleBy(by: number) {
+export function isDivisibleBy(msg: string, by: number) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isDivisibleBy(str(value), by)) {
-            return { isDivisibleBy: by };
+            return { message: msg, isDivisibleBy: by };
         }
     };
 }
 
-export function isEAN() {
+export function isEAN(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isEAN(str(value))) {
-            return { isEAN: true };
+            return { message: msg, isEAN: true };
         }
     };
 }
 
-export function isEmpty(options?: validator.IsEmptyOptions) {
+export function isEmpty(msg: string, options?: validator.IsEmptyOptions) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isEmpty(str(value), options)) {
-            return { isEmpty: options || true };
+            return { message: msg, isEmpty: options || true };
         }
     };
 }
 
-export function isNotEmpty(options?: validator.IsEmptyOptions) {
+export function isNotEmpty(msg: string, options?: validator.IsEmptyOptions) {
     return ({ value }: FormControl<string>) => {
         if (validator.isEmpty(str(value), options)) {
-            return { isNotEmpty: options || true };
+            return { message: msg, isNotEmpty: options || true };
         }
     };
 }
 
-export function isEthereumAddress() {
+export function isEthereumAddress(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isEthereumAddress(str(value))) {
-            return { isEthereumAddress: true };
+            return { message: msg, isEthereumAddress: true };
         }
     };
 }
 
-export function isFloat(options?: validator.IsFloatOptions) {
+export function isFloat(msg: string, options?: validator.IsFloatOptions) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isFloat(str(value), options)) {
-            return { isFloat: options || true };
+            return { message: msg, isFloat: options || true };
         }
     };
 }
 
-export function isFullWidth() {
+export function isFullWidth(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isFullWidth(str(value))) {
-            return { isFullWidth: true };
+            return { message: msg, isFullWidth: true };
         }
     };
 }
 
-export function isFQDN(options?: IsFQDNOptions) {
+export function isFQDN(msg: string, options?: IsFQDNOptions) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isFQDN(value, options)) {
-            return { isFQDN: options || true };
+            return { message: msg, isFQDN: options || true };
         }
     };
 }
 
-export function isHSL() {
+export function isHSL(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isHSL(str(value))) {
-            return { isHSL: true };
+            return { message: msg, isHSL: true };
         }
     };
 }
 
-export function isHalfWidth() {
+export function isHalfWidth(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isHalfWidth(str(value))) {
-            return { isHalfWidth: true };
+            return { message: msg, isHalfWidth: true };
         }
     };
 }
 
-export function isHash(algorithm: validator.HashAlgorithm) {
+export function isHash(msg: string, algorithm: validator.HashAlgorithm) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isHash(str(value), algorithm)) {
-            return { isHash: algorithm };
+            return { message: msg, isHash: algorithm };
         }
     };
 }
 
-export function isHexColor() {
+export function isHexColor(msg: string) {
     return <T extends number | string>({ value }: FormControl<T>) => {
         if (!validator.isHexColor(str(value))) {
-            return { isHexColor: true };
+            return { message: msg, isHexColor: true };
         }
     };
 }
 
-export function isHexadecimal() {
+export function isHexadecimal(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isHexadecimal(str(value))) {
-            return { isHexadecimal: true };
+            return { message: msg, isHexadecimal: true };
         }
     };
 }
 
-export function isIBAN() {
+export function isIBAN(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isIBAN(str(value))) {
-            return { isIBAN: true };
+            return { message: msg, isIBAN: true };
         }
     };
 }
 
-export function isIP(options?: validator.IPVersion) {
+export function isIP(msg: string, options?: validator.IPVersion) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isIP(str(value), options)) {
-            return { isIP: options || true };
+            return { message: msg, isIP: options || true };
         }
     };
 }
 
-export function isIPRange(options?: validator.IPVersion) {
+export function isIPRange(msg: string, options?: validator.IPVersion) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isIPRange(str(value), options)) {
-            return { isIPRange: options || true };
+            return { message: msg, isIPRange: options || true };
         }
     };
 }
 
-export function isISBN(options?: validator.ISBNVersion) {
+export function isISBN(msg: string, options?: validator.ISBNVersion) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isISBN(str(value), options)) {
-            return { isISBN: options || true };
+            return { message: msg, isISBN: options || true };
         }
     };
 }
 
-export function isISIN() {
+export function isISIN(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isISIN(str(value))) {
-            return { isISIN: true };
+            return { message: msg, isISIN: true };
         }
     };
 }
 
-export function isISO31661Alpha2() {
+export function isISO31661Alpha2(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isISO31661Alpha2(str(value))) {
-            return { isISO31661Alpha2: true };
+            return { message: msg, isISO31661Alpha2: true };
         }
     };
 }
 
-export function isISO31661Alpha3() {
+export function isISO31661Alpha3(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isISO31661Alpha3(str(value))) {
-            return { isISO31661Alpha3: true };
+            return { message: msg, isISO31661Alpha3: true };
         }
     };
 }
 
-export function isISO4217() {
+export function isISO4217(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isISO4217(str(value))) {
-            return { isISO4217: true };
+            return { message: msg, isISO4217: true };
         }
     };
 }
 
-export function isISO8601(options?: validator.IsISO8601Options) {
+export function isISO8601(msg: string, options?: validator.IsISO8601Options) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isISO8601(str(value), options)) {
-            return { isISO8601: options || true };
+            return { message: msg, isISO8601: options || true };
         }
     };
 }
 
-export function isISRC() {
+export function isISRC(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isISRC(str(value))) {
-            return { isISRC: true };
+            return { message: msg, isISRC: true };
         }
     };
 }
 
-export function isISSN(options?: validator.IsISSNOptions) {
+export function isISSN(msg: string, options?: validator.IsISSNOptions) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isISSN(str(value), options)) {
-            return { isISSN: options || true };
+            return { message: msg, isISSN: options || true };
         }
     };
 }
 
 export type IsIdentityCard = "any" | validator.IdentityCardLocale;
-export function isIdentityCard(options?: IsIdentityCard) {
+export function isIdentityCard(msg: string, options?: IsIdentityCard) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isIdentityCard(str(value), options)) {
-            return { isIdentityCard: options || true };
+            return { message: msg, isIdentityCard: options || true };
         }
     };
 }
 
-export function isJSON() {
+export function isJSON(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isJSON(str(value))) {
-            return { isJSON: true };
+            return { message: msg, isJSON: true };
         }
     };
 }
 
-export function isJWT() {
+export function isJWT(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isJWT(str(value))) {
-            return { isJWT: true };
+            return { message: msg, isJWT: true };
         }
     };
 }
 
-export function isLatLong() {
+export function isLatLong(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isLatLong(str(value))) {
-            return { isLatLong: true };
+            return { message: msg, isLatLong: true };
         }
     };
 }
 
-export function isLocale() {
+export function isLocale(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isLocale(str(value))) {
-            return { isLocale: true };
+            return { message: msg, isLocale: true };
         }
     };
 }
 
-export function isLowercase() {
+export function isLowercase(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isLowercase(str(value))) {
-            return { isLowercase: true };
+            return { message: msg, isLowercase: true };
         }
     };
 }
 
-export function isMACAddress(options?: validator.IsMACAddressOptions) {
+export function isMACAddress(
+    msg: string,
+    options?: validator.IsMACAddressOptions
+) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isMACAddress(str(value), options)) {
-            return { isMACAddress: options || true };
+            return { message: msg, isMACAddress: options || true };
         }
     };
 }
 
-export function isMD5() {
+export function isMD5(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isMD5(str(value))) {
-            return { isMD5: true };
+            return { message: msg, isMD5: true };
         }
     };
 }
 
-export function isMagnetURI() {
+export function isMagnetURI(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isMagnetURI(str(value))) {
-            return { isMagnetURI: true };
+            return { message: msg, isMagnetURI: true };
         }
     };
 }
 
-export function isMimeType() {
+export function isMimeType(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isMimeType(str(value))) {
-            return { isMimeType: true };
+            return { message: msg, isMimeType: true };
         }
     };
 }
@@ -505,100 +511,100 @@ export interface IsMobilePhone {
         | validator.MobilePhoneLocale[];
     options?: validator.IsMobilePhoneOptions;
 }
-export function isMobilePhone(config: IsMobilePhone = {}) {
+export function isMobilePhone(msg: string, config: IsMobilePhone = {}) {
     const { locale, options } = config;
     return ({ value }: FormControl<string>) => {
         if (!validator.isMobilePhone(str(value), locale, options)) {
-            return { isMobilePhone: config || true };
+            return { message: msg, isMobilePhone: config || true };
         }
     };
 }
 
-export function isMongoId() {
+export function isMongoId(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isMongoId(str(value))) {
-            return { isMongoId: true };
+            return { message: msg, isMongoId: true };
         }
     };
 }
 
-export function isMultibyte() {
+export function isMultibyte(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isMultibyte(str(value))) {
-            return { isMultibyte: true };
+            return { message: msg, isMultibyte: true };
         }
     };
 }
 
-export function isNumeric(options?: validator.IsNumericOptions) {
+export function isNumeric(msg: string, options?: validator.IsNumericOptions) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isNumeric(str(value), options)) {
-            return { isNumeric: options || true };
+            return { message: msg, isNumeric: options || true };
         }
     };
 }
 
-export function isOctal() {
+export function isOctal(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isOctal(str(value))) {
-            return { isOctal: true };
+            return { message: msg, isOctal: true };
         }
     };
 }
 
-export function isPassportNumber(countryCode?: string) {
+export function isPassportNumber(msg: string, countryCode?: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isPassportNumber(str(value), countryCode)) {
-            return { isPassportNumber: countryCode || true };
+            return { message: msg, isPassportNumber: countryCode || true };
         }
     };
 }
 
-export function isPort() {
+export function isPort(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isPort(str(value))) {
-            return { isPort: true };
+            return { message: msg, isPort: true };
         }
     };
 }
 
 export type IsPostalCode = "any" | validator.PostalCodeLocale;
-export function isPostalCode(locale: IsPostalCode) {
+export function isPostalCode(msg: string, locale: IsPostalCode) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isPostalCode(str(value), locale)) {
-            return { isPostalCode: locale };
+            return { message: msg, isPostalCode: locale };
         }
     };
 }
 
-export function isRFC3339() {
+export function isRFC3339(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isRFC3339(str(value))) {
-            return { isRFC3339: true };
+            return { message: msg, isRFC3339: true };
         }
     };
 }
 
-export function isRgbColor(includePercentValues?: boolean) {
+export function isRgbColor(msg: string, includePercentValues?: boolean) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isRgbColor(str(value), includePercentValues)) {
-            return { isRgbColor: includePercentValues || true };
+            return { message: msg, isRgbColor: includePercentValues || true };
         }
     };
 }
 
-export function isSemVer() {
+export function isSemVer(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isSemVer(str(value))) {
-            return { isSemVer: true };
+            return { message: msg, isSemVer: true };
         }
     };
 }
 
-export function isSlug() {
+export function isSlug(msg: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isSlug(str(value))) {
-            return { isSlug: true };
+            return { message: msg, isSlug: true };
         }
     };
 }
@@ -606,82 +612,82 @@ export function isSlug() {
 export type IsStrongPassword = validator.StrongPasswordOptions & {
     returnScore?: false;
 };
-export function isStrongPassword(options?: IsStrongPassword) {
+export function isStrongPassword(msg: string, options?: IsStrongPassword) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isStrongPassword(str(value), options)) {
-            return { isStrongPassword: options || true };
+            return { message: msg, isStrongPassword: options || true };
         }
     };
 }
 
-export function isSurrogatePair() {
+export function isSurrogatePair(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isSurrogatePair(str(value))) {
-            return { isSurrogatePair: true };
+            return { message: msg, isSurrogatePair: true };
         }
     };
 }
 
-export function isTaxID(locale?: string) {
+export function isTaxID(msg: string, locale?: string) {
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!validator.isTaxID(str(value), locale)) {
-            return { isTaxID: locale || true };
+            return { message: msg, isTaxID: locale || true };
         }
     };
 }
 
-export function isURL(options?: IsURLOptions) {
+export function isURL(msg: string, options?: IsURLOptions) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isURL(str(value), options)) {
-            return { isURL: options || true };
+            return { message: msg, isURL: options || true };
         }
     };
 }
 
-export function isUUID(version?: validator.UUIDVersion) {
+export function isUUID(msg: string, version?: validator.UUIDVersion) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isUUID(str(value), version)) {
-            return { isUUID: version || true };
+            return { message: msg, isUUID: version || true };
         }
     };
 }
 
-export function isUppercase() {
+export function isUppercase(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isUppercase(str(value))) {
-            return { isUppercase: true };
+            return { message: msg, isUppercase: true };
         }
     };
 }
 
-export function isVAT(countryCode: string) {
+export function isVAT(msg: string, countryCode: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isVAT(str(value), countryCode)) {
-            return { isVAT: true };
+            return { message: msg, isVAT: true };
         }
     };
 }
 
-export function isVariableWidth() {
+export function isVariableWidth(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isVariableWidth(str(value))) {
-            return { isVariableWidth: true };
+            return { message: msg, isVariableWidth: true };
         }
     };
 }
 
-export function isWhitelisted(chars: string | string[]) {
+export function isWhitelisted(msg: string, chars: string | string[]) {
     return ({ value }: FormControl<string>) => {
         if (!validator.isWhitelisted(str(value), chars)) {
-            return { isWhitelisted: chars };
+            return { message: msg, isWhitelisted: chars };
         }
     };
 }
 
-export function isString() {
+export function isString(msg: string) {
     return ({ value }: FormControl<string>) => {
         if (typeof value !== "string") {
-            return { isString: true };
+            return { message: msg, isString: true };
         }
     };
 }
@@ -690,11 +696,11 @@ export interface RegexPattern {
     pattern: string | RegExp;
     flags?: string | undefined;
 }
-export function pattern(config: RegexPattern) {
+export function pattern(msg: string, config: RegexPattern) {
     const regex = new RegExp(config.pattern, config.flags);
     return <T extends string | number>({ value }: FormControl<T>) => {
         if (!regex.test(str(value))) {
-            return { pattern: str(regex) };
+            return { message: msg, pattern: str(regex) };
         }
     };
 }
