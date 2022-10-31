@@ -87,6 +87,12 @@ class FormGroup<T extends object> extends AbstractControl<
         } as ExtractFormValue<T>;
     }
 
+    public setDisabled(value: boolean): void {
+        Object.keys(this.__controls).forEach((key) => {
+            (<any>this.__controls)[key].setDisabled(value);
+        });
+    }
+
     public reset(): void {
         Object.keys(this.__controls).forEach((key) => {
             (<any>this.__controls)[key].reset();

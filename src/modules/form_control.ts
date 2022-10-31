@@ -1,7 +1,6 @@
 import AbstractControl, { Status } from "../internals/abstract_control";
 import utils from "../utils";
 import { FormControlValue, FormControlErrors, FormResult } from "../types";
-import { validators } from "public_api";
 
 type FCE = string | number | boolean;
 type Validator<T extends FCE> = (ctrl: FormControl<T>) => FormControlErrors | undefined | void; // prettier-ignore
@@ -20,8 +19,14 @@ class FormControl<T extends FCE> extends AbstractControl<
         return this.__value as FormResult<T>;
     }
     public setValue(value: T): void {
+        console.log("SetValue", value);
         this.__value = value;
         this.validate();
+    }
+
+    private __input?: HTMLElement;
+    set input(input: HTMLElement) {
+        this.__input = input;
     }
 
     private __errors: FormControlErrors = {};
@@ -140,6 +145,13 @@ class FormControl<T extends FCE> extends AbstractControl<
             untouched: this.untouched,
             errors: this.errors,
         };
+    }
+
+    public setDisabled(value: boolean): void {
+        if (value === false) {
+            return this.__input?.removeAttribute("disabled");
+        }
+        this.__input?.setAttribute("disabled", "");
     }
 
     public reset(): void {

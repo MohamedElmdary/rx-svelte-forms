@@ -41,6 +41,7 @@ function form(el: Element, ctrl: AbstractControl<any, any>) {
 
     if (ctrl instanceof FormControl) {
         const $ = el as HTMLInputElement | HTMLSelectElement;
+        ctrl.input = $;
 
         $.onblur = () => {
             ctrl.markAsTouched();
@@ -65,16 +66,17 @@ function form(el: Element, ctrl: AbstractControl<any, any>) {
 }
 
 function __handleSelect($: HTMLSelectElement, ctrl: FormControl<any>) {
-    for (const option of $.options) {
-        if (
-            ctrl.value === null ||
-            ctrl.value === "" ||
-            ctrl.value === option.value
-        ) {
-            option.selected = true;
-            break;
+    function setValue(value: any) {
+        for (const option of $.options) {
+            if (value === null || value === "" || value === option.value) {
+                option.selected = true;
+                break;
+            }
         }
     }
+
+    setValue(ctrl.value);
+
     $.onchange = () => {
         ctrl.markAsDirty();
         ctrl.setValue($.options[$.options.selectedIndex].value);
@@ -82,15 +84,19 @@ function __handleSelect($: HTMLSelectElement, ctrl: FormControl<any>) {
 }
 
 function __handleInput($: HTMLInputElement, ctrl: FormControl<any>) {
-    if ($.type === "checkbox") {
-        $.checked = ctrl.value as boolean;
-    } else if ($.type === "radio") {
-        if ($.value === ctrl.value) {
-            $.checked = true;
+    function setValue(value: any) {
+        if ($.type === "checkbox") {
+            $.checked = value as boolean;
+        } else if ($.type === "radio") {
+            if ($.value === value) {
+                $.checked = true;
+            }
+        } else {
+            $.value = value as string;
         }
-    } else {
-        $.value = ctrl.value as string;
     }
+
+    setValue(ctrl.value);
 
     $.oninput = () => {
         ctrl.markAsDirty();

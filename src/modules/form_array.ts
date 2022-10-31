@@ -89,6 +89,10 @@ class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
         } as ExtractFormValue<T>;
     }
 
+    public setDisabled(value: boolean): void {
+        this.controls.forEach((ctrl) => ctrl.setDisabled(value));
+    }
+
     public reset(): void {
         this.controls.forEach((ctrl) => ctrl.reset());
     }
