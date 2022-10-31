@@ -115,10 +115,12 @@ class FormControl<T extends FCE> extends AbstractControl<
                 const error = await validator(this);
                 if (error) {
                     this.error = error;
-                    break;
+                    return;
                 }
             }
         }
+
+        this.error = undefined;
     }
 
     public getValue(): FormControlValue<T> {
