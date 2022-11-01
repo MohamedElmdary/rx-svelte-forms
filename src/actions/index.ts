@@ -68,7 +68,7 @@ function form(el: Element, ctrl: AbstractControl<any, any>) {
 function __handleSelect($: HTMLSelectElement, ctrl: FormControl<any>) {
     function setValue(value: any) {
         for (const option of $.options) {
-            if (value === null || value === "" || value === option.value) {
+            if (value === null || value === "" || value == option.value) {
                 option.selected = true;
                 break;
             }
