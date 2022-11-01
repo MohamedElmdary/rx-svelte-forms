@@ -80,6 +80,7 @@ function __handleSelect($: HTMLSelectElement, ctrl: FormControl<any>) {
     $.onchange = () => {
         ctrl.markAsDirty();
         ctrl.setValue($.options[$.options.selectedIndex].value);
+        setValue(ctrl.value);
     };
 }
 
@@ -107,6 +108,7 @@ function __handleInput($: HTMLInputElement, ctrl: FormControl<any>) {
         } else {
             ctrl.setValue($.value);
         }
+        setValue(ctrl.value);
     };
 }
 

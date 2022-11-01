@@ -1,6 +1,6 @@
 {
     "name": "rx-svelte-forms",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "Reactive svelte forms inspired by angular reactive forms.",
     "main": "dist/public_api.js",
     "types": "dist/public_api.d.ts",
