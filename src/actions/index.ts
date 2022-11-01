@@ -59,7 +59,7 @@ function form(el: Element, ctrl: AbstractControl<any, any>) {
                 $.oninput = null;
                 $.onblur = null;
                 $.onchange = null;
-                ctrl.destroy();
+                // ctrl.destroy(); // might be used somewhere else
             },
         };
     }
