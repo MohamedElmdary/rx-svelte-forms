@@ -1,5 +1,5 @@
 {
-    "name": "tf-svelte-forms",
+    "name": "tf-svelte-rx-forms",
     "version": "1.0.0",
     "description": "Reactive svelte forms inspired by angular reactive forms.",
     "main": "dist/public_api.js",
