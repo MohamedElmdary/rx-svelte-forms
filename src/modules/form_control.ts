@@ -144,14 +144,22 @@ class FormControl<T extends FCE> extends AbstractControl<
         this.__input?.setAttribute("disabled", "");
     }
 
-    public addValidator(fn: Validator<T>): void {
-        this.__validators.push(fn);
+    public addValidator(
+        fn: Validator<T>,
+        index: number = this.__validators.length
+    ): void {
+        const idx = Math.max(0, Math.min(this.__validators.length, index));
+        this.__validators.splice(idx, 0, fn);
         this.__setRequired();
         this.validate();
     }
 
-    public addAsyncValidator(fn: AsyncValidator<T>): void {
-        this.__asyncValidators.push(fn);
+    public addAsyncValidator(
+        fn: AsyncValidator<T>,
+        index: number = this.__asyncValidators.length
+    ): void {
+        const idx = Math.max(0, Math.min(this.__asyncValidators.length, index));
+        this.__asyncValidators.splice(idx, 0, fn);
         this.__setRequired();
         this.validate();
     }
