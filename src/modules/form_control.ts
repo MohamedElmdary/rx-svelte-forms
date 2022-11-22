@@ -146,11 +146,13 @@ class FormControl<T extends FCE> extends AbstractControl<
 
     public addValidator(fn: Validator<T>): void {
         this.__validators.push(fn);
+        this.__setRequired();
         this.validate();
     }
 
     public addAsyncValidator(fn: AsyncValidator<T>): void {
         this.__asyncValidators.push(fn);
+        this.__setRequired();
         this.validate();
     }
 
@@ -158,6 +160,7 @@ class FormControl<T extends FCE> extends AbstractControl<
         const idx = this.__validators.findIndex((v) => v === fn);
         if (idx > -1) {
             this.__validators.splice(idx, 1);
+            this.__setRequired();
             this.validate();
         }
     }
@@ -166,6 +169,7 @@ class FormControl<T extends FCE> extends AbstractControl<
         const idx = this.__asyncValidators.findIndex((v) => v === fn);
         if (idx > -1) {
             this.__asyncValidators.splice(idx, 1);
+            this.__setRequired();
             this.validate();
         }
     }
