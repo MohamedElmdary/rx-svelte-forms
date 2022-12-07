@@ -7,7 +7,7 @@ enum Status {
     pending = "PENDING",
 }
 
-abstract class AbstractControl<T, V> extends RxStore<T> {
+abstract class AbstractControl<T, V, C = any> extends RxStore<T> {
     public key?: number;
     public root?: AbstractControl<any, any>;
 
@@ -31,9 +31,9 @@ abstract class AbstractControl<T, V> extends RxStore<T> {
 
     public abstract markAsTouched(): void;
     public abstract markAsDirty(): void;
-    public abstract validate(): void;
+    public abstract validate(ctx?: C): void;
     public abstract setDisabled(value: boolean): void;
-    public abstract reset(): void;
+    public abstract reset(ctx?: C): void;
 
     public override notifyListeners(): void {
         super.notifyListeners();

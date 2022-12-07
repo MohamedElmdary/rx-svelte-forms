@@ -2,10 +2,10 @@ import AbstractControl, { Status } from "../internals/abstract_control";
 import { FormControlValue, FormControlErrors, FormResult } from "../types";
 
 type FCE = string | number | boolean;
-type Validator<T extends FCE> = (ctrl: FormControl<T>) => FormControlErrors; // prettier-ignore
-type AsyncValidator<T extends FCE> = (ctrl: FormControl<T>) => Promise<FormControlErrors>; // prettier-ignore
+type Validator<T extends FCE, C = any> = (ctrl: FormControl<T, C>, ctx?: C) => FormControlErrors; // prettier-ignore
+type AsyncValidator<T extends FCE, C = any> = (ctrl: FormControl<T, C>, ctx?: C) => Promise<FormControlErrors>; // prettier-ignore
 
-class FormControl<T extends FCE> extends AbstractControl<
+class FormControl<T extends FCE, C = any> extends AbstractControl<
     FormControlValue<T>,
     T
 > {
@@ -17,9 +17,9 @@ class FormControl<T extends FCE> extends AbstractControl<
     public get value(): FormResult<T> {
         return this.__value as FormResult<T>;
     }
-    public setValue(value: T): void {
+    public setValue(value: T, ctx?: C): void {
         this.__value = value;
-        this.validate();
+        this.validate(ctx);
     }
 
     private __input?: HTMLElement;
@@ -94,7 +94,7 @@ class FormControl<T extends FCE> extends AbstractControl<
         }
     }
 
-    public async validate(): Promise<void> {
+    public async validate(ctx?: C): Promise<void> {
         this.__status = Status.pending;
         this.notifyListeners();
 
@@ -112,7 +112,7 @@ class FormControl<T extends FCE> extends AbstractControl<
 
         for (const validators of [this.__validators, this.__asyncValidators]) {
             for (const validator of validators) {
-                const error = await validator(this);
+                const error = await validator(this, ctx);
                 if (error) {
                     this.error = error;
                     return;
@@ -146,43 +146,45 @@ class FormControl<T extends FCE> extends AbstractControl<
 
     public addValidator(
         fn: Validator<T>,
-        index: number = this.__validators.length
+        index: number = this.__validators.length,
+        ctx?: C
     ): void {
         const idx = Math.max(0, Math.min(this.__validators.length, index));
         this.__validators.splice(idx, 0, fn);
         this.__setRequired();
-        this.validate();
+        this.validate(ctx);
     }
 
     public addAsyncValidator(
         fn: AsyncValidator<T>,
-        index: number = this.__asyncValidators.length
+        index: number = this.__asyncValidators.length,
+        ctx?: C
     ): void {
         const idx = Math.max(0, Math.min(this.__asyncValidators.length, index));
         this.__asyncValidators.splice(idx, 0, fn);
         this.__setRequired();
-        this.validate();
+        this.validate(ctx);
     }
 
-    public removeValidator(fn: Validator<T>): void {
+    public removeValidator(fn: Validator<T>, ctx?: C): void {
         const idx = this.__validators.findIndex((v) => v === fn);
         if (idx > -1) {
             this.__validators.splice(idx, 1);
             this.__setRequired();
-            this.validate();
+            this.validate(ctx);
         }
     }
 
-    public removeAsyncValidator(fn: AsyncValidator<T>): void {
+    public removeAsyncValidator(fn: AsyncValidator<T>, ctx?: C): void {
         const idx = this.__asyncValidators.findIndex((v) => v === fn);
         if (idx > -1) {
             this.__asyncValidators.splice(idx, 1);
             this.__setRequired();
-            this.validate();
+            this.validate(ctx);
         }
     }
 
-    public reset(): void {
+    public reset(ctx?: C): void {
         this.__value = this.__defaultValue;
         this.__validators = [...this.__defaultValidators];
         this.__asyncValidators = [...this.__defaultAsyncValidators];
@@ -191,12 +193,12 @@ class FormControl<T extends FCE> extends AbstractControl<
         this.__dirty = false;
 
         this.__setRequired();
-        this.validate();
+        this.validate(ctx);
     }
 
-    private __setRequired(): void {
+    private __setRequired(ctx?: C): void {
         for (const validator of this.__validators) {
-            const error = validator({ value: null } as any);
+            const error = validator({ value: null } as any, ctx);
             if (error && error.required) {
                 this.__required = true;
                 return;

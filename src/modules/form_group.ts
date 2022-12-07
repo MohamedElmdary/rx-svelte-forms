@@ -1,9 +1,10 @@
 import AbstractControl from "../internals/abstract_control";
 import { ExtractFormValue, FormResult } from "../types";
 
-class FormGroup<T extends object> extends AbstractControl<
+class FormGroup<T extends object, C = any> extends AbstractControl<
     ExtractFormValue<T>,
-    T
+    T,
+    C
 > {
     private __controls: T;
     get controls(): T {
@@ -65,9 +66,9 @@ class FormGroup<T extends object> extends AbstractControl<
         });
     }
 
-    public validate(): void {
+    public validate(ctx?: C): void {
         Object.keys(this.__controls).forEach((key) => {
-            (<any>this.__controls)[key].validate();
+            (<any>this.__controls)[key].validate(ctx);
         });
     }
 
@@ -93,9 +94,9 @@ class FormGroup<T extends object> extends AbstractControl<
         });
     }
 
-    public reset(): void {
+    public reset(ctx?: C): void {
         Object.keys(this.__controls).forEach((key) => {
-            (<any>this.__controls)[key].reset();
+            (<any>this.__controls)[key].reset(ctx);
         });
     }
 

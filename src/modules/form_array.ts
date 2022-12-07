@@ -4,10 +4,10 @@ import { Unsubscriber } from "../internals/rx_store";
 
 type OnPush = (ctrls: AbstractControl<any, any>[]) => void;
 
-class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
-    ExtractFormValue<T>,
-    T
-> {
+class FormArray<
+    T extends AbstractControl<any, any>[],
+    C = any
+> extends AbstractControl<ExtractFormValue<T>, T, C> {
     private __index: number;
     private __controls: T;
     get controls(): T {
@@ -71,8 +71,8 @@ class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
     public markAsDirty(): void {
         this.__controls.forEach((ctrl) => ctrl.markAsDirty());
     }
-    public validate(): void {
-        this.__controls.forEach((ctrl) => ctrl.validate());
+    public validate(ctx?: C): void {
+        this.__controls.forEach((ctrl) => ctrl.validate(ctx));
     }
 
     public getValue(): ExtractFormValue<T> {
@@ -93,8 +93,8 @@ class FormArray<T extends AbstractControl<any, any>[]> extends AbstractControl<
         this.controls.forEach((ctrl) => ctrl.setDisabled(value));
     }
 
-    public reset(): void {
-        this.controls.forEach((ctrl) => ctrl.reset());
+    public reset(ctx?: C): void {
+        this.controls.forEach((ctrl) => ctrl.reset(ctx));
     }
 
     public override destroy(): void {
